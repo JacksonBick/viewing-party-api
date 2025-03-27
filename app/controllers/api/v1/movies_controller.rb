@@ -7,11 +7,16 @@ class Api::V1::MoviesController < ApplicationController
     end
 
     response = conn.get('/search/movie', { query: movie_name })
-
-    movie_data = JSON.parse(response.body)
+    Rails.logger.debug("API Response: #{response.body}")
 
     if response.status == 200
-      render json: { data: movie_data['results'].take(20) }
+      movie_data = JSON.parse(response.body)
+
+      formatted_data = movie_data['results'].map do |movie|
+        MovieSerializer.new(movie).serializable_hash
+      end
+
+        render json: { data: formatted_data.take(20)}
     end
   end
 end
