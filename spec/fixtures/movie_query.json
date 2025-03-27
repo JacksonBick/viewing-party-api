@@ -1,0 +1,37 @@
+{
+    "page": 1,
+    "results": [
+      {
+        "poster_path": "/qkFpnypkbYPl1fszdRe6XqIh9mI.jpg",
+        "adult": false,
+        "overview": "A thief who enters the dreams of others to steal secrets from their subconscious is given the task of planting an idea into the mind of a CEO.",
+        "release_date": "2010-07-16",
+        "genre_ids": [28, 12, 878],
+        "id": 27205,
+        "original_title": "Inception",
+        "original_language": "en",
+        "title": "Inception",
+        "backdrop_path": "/s2bT29y0ngXxxu2IA8AOzzXvN1h.jpg",
+        "popularity": 46.803,
+        "vote_count": 26710,
+        "vote_average": 8.3
+      },
+      {
+        "poster_path": "/oGRfEgHl6I8glUtM4XYotWobmuX.jpg",
+        "adult": false,
+        "overview": "The misadventures of an Indian Muslim community's wife as she struggles to reunite with her husband who left her and then disappeared without a trace.",
+        "release_date": "2010-09-10",
+        "genre_ids": [35, 18, 10751],
+        "id": 34442,
+        "original_title": "The Other Woman",
+        "original_language": "en",
+        "title": "The Other Woman",
+        "backdrop_path": "/yyHV3OjsT0KpCPM8X6t8F61ddHK.jpg",
+        "popularity": 5.757,
+        "vote_count": 224,
+        "vote_average": 5.9
+      }
+    ],
+    "total_results": 2,
+    "total_pages": 1
+  }
