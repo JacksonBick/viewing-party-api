@@ -1,22 +1,21 @@
 class Api::V1::MoviesController < ApplicationController
-  def show
-    movie_name = params[:movie_name]
+  def index
+    if params[:query].present?
+      search_movies_data = SearchFacade.new.searched_movies(params[:query])
 
-    conn = Faraday.new(url: 'https://api.themoviedb.org/3') do |faraday|
-      faraday.headers['Authorization'] = "Bearer #{ENV["tmbd_token"]}"
-    end
+      searched_movies = search_movies_data.map { |search_movie_data| Movie.new(search_movie_data) }
 
-    response = conn.get('/search/movie', { query: movie_name })
-    Rails.logger.debug("API Response: #{response.body}")
+      serialized_movies = MovieSerializer.new(searched_movies).serializable_hash
 
-    if response.status == 200
-      movie_data = JSON.parse(response.body)
+      render json: { data: serialized_movies[:data] }
+    else
+      top_movies_data = TopRatedFacade.new.top_movies 
 
-      formatted_data = movie_data['results'].map do |movie|
-        MovieSerializer.new(movie).serializable_hash
-      end
+      top_movies = top_movies_data.map { |top_movie_data| Movie.new(top_movie_data) }
 
-        render json: { data: formatted_data.take(20)}
+      serialized_movies = MovieSerializer.new(top_movies).serializable_hash
+
+      render json: { data: serialized_movies[:data] }
     end
   end
 end

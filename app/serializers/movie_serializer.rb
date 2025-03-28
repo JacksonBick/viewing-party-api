@@ -1,20 +1,5 @@
-class MovieSerializer < ActiveModel::Serializer
+class MovieSerializer
   include JSONAPI::Serializer
-  attributes :id, :type, :title, :vote_average
-
-  def id
-    object['id'].to_s 
-  end
-
-  def type
-    'movie'
-  end
-
-  def title
-    object['title']
-  end
-
-  def vote_average
-    object['vote_average']
-  end
+  set_id :id
+  attributes :title, :vote_average
 end
