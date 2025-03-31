@@ -9,9 +9,16 @@ class Api::V1::UsersController < ApplicationController
   end
 
   def index
-    render json: UserSerializer.format_user_list(User.all)
+    render json: UserSerializer.new(users).serializable_hash
   end
 
+  def show
+    user = User.find(params[:id])
+    render json: UserSerializer.new(user).serializable_hash
+  rescue ActiveRecord::RecordNotFound
+    render json: { message: "Invalid User ID", status: 404 }, status: :not_found
+  end
+  
   private
 
   def user_params

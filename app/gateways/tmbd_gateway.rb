@@ -9,6 +9,10 @@ class TmbdGateway
     get_url("search/movie?query=#{title}")
   end
 
+  def movie_details(string)
+    get_url("discover/movie?#{string}")
+  end
+
   def get_url(url)
     response = conn.get(url)
   
