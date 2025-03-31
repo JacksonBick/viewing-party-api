@@ -1,22 +1,27 @@
 class Api::V1::MoviesController < ApplicationController
+  def index
+    if params[:query].present?
+      search_movies_data = SearchFacade.new.searched_movies(params[:query])
+
+      searched_movies = search_movies_data.map { |search_movie_data| Movie.new(search_movie_data) }
+
+      serialized_movies = MovieSerializer.new(searched_movies).serializable_hash
+
+      render json: { data: serialized_movies[:data] }
+    else
+      top_movies_data = TopRatedFacade.new.top_movies 
+
+      top_movies = top_movies_data.map { |top_movie_data| Movie.new(top_movie_data) }
+
+      serialized_movies = MovieSerializer.new(top_movies).serializable_hash
+
+      render json: { data: serialized_movies[:data] }
+    end
+  end
+
   def show
-    movie_name = params[:movie_name]
+    movie_details_data = DetailFacade.new.found_details(params[:id])
 
-    conn = Faraday.new(url: 'https://api.themoviedb.org/3') do |faraday|
-      faraday.headers['Authorization'] = "Bearer #{ENV["tmbd_token"]}"
-    end
-
-    response = conn.get('/search/movie', { query: movie_name })
-    Rails.logger.debug("API Response: #{response.body}")
-
-    if response.status == 200
-      movie_data = JSON.parse(response.body)
-
-      formatted_data = movie_data['results'].map do |movie|
-        MovieSerializer.new(movie).serializable_hash
-      end
-
-        render json: { data: formatted_data.take(20)}
-    end
+    render json: { data: { id: movie_details_data.id, type: "movie", attributes: movie_details_data.attributes } }
   end
 end

@@ -1,29 +1,57 @@
-require "rails_helper"
+require 'rails_helper'
 
-RSpec.describe "Movies Endpoint", type: :request do
-  describe "GET #show" do
-    context "when the external API request is successful" do
-      it "returns a successful response with movie data" do
-        movie_name = "Inception"
+RSpec.describe "MoviesController", type: :request do
+  describe "GET /api/v1/movies" do
+    context "when a query is provided" do
+      it "returns a list of searched movies", :vcr do
+        get "/api/v1/movies?query=inception"
 
-        movie_search_response = File.read(Rails.root.join('spec', 'fixtures', 'movie_query.json'))
-        
-        stub_request(:get, "https://api.themoviedb.org/search/movie?query=Inception").
-         with(
-           headers: {
-          'Accept'=>'*/*',
-          'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
-          'Authorization'=>"Bearer #{ENV['tmbd_token']}",
-          'User-Agent'=>'Faraday v2.10.1'
-           }).
-         to_return(status: 200, body: movie_search_response, headers: {})
-     
-        get "/api/v1/movies/#{movie_name}"
         expect(response).to be_successful
-        json = JSON.parse(response.body, symbolize_names: true)
-        expect(json[:data]).to be_an(Array)
-        expect(json[:data].first[:title]).to eq("Inception")
 
+        json_response = JSON.parse(response.body, symbolize_names: true)
+        expect(json_response[:data]).to be_an(Array)
+        expect(json_response[:data].first).to have_key(:id)
+        expect(json_response[:data].first).to have_key(:attributes)
+        expect(json_response[:data].first[:attributes]).to have_key(:title)
+      end
+    end
+
+    context "when no query is provided" do
+      it "returns a list of top-rated movies", :vcr do
+        get "/api/v1/movies"
+
+        expect(response).to be_successful
+
+        json_response = JSON.parse(response.body, symbolize_names: true)
+        expect(json_response[:data]).to be_an(Array)
+        expect(json_response[:data].first).to have_key(:id)
+        expect(json_response[:data].first).to have_key(:attributes)
+        expect(json_response[:data].first[:attributes]).to have_key(:title)
+      end
+    end
+  end
+
+  describe "GET /api/v1/movies/:id" do
+    context "when the movie ID is valid" do
+      it "returns the details of a specific movie", :vcr do
+        movie_id = 278
+        get "/api/v1/movies/#{movie_id}"
+
+        expect(response).to be_successful
+
+        json_response = JSON.parse(response.body, symbolize_names: true)
+
+        expect(json_response[:data]).to have_key(:id)
+        expect(json_response[:data]).to have_key(:type)
+        expect(json_response[:data][:attributes]).to have_key(:title)
+        expect(json_response[:data][:attributes]).to have_key(:release_year)
+        expect(json_response[:data][:attributes]).to have_key(:vote_average)
+        expect(json_response[:data][:attributes]).to have_key(:runtime)
+        expect(json_response[:data][:attributes]).to have_key(:genres)
+        expect(json_response[:data][:attributes]).to have_key(:summary)
+        expect(json_response[:data][:attributes]).to have_key(:cast)
+        expect(json_response[:data][:attributes]).to have_key(:total_reviews)
+        expect(json_response[:data][:attributes]).to have_key(:reviews)
       end
     end
   end

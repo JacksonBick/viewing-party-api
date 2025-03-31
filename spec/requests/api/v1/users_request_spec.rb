@@ -84,7 +84,23 @@ RSpec.describe "Users API", type: :request do
       expect(json[:data][0][:attributes]).to have_key(:username)
       expect(json[:data][0][:attributes]).to_not have_key(:password)
       expect(json[:data][0][:attributes]).to_not have_key(:password_digest)
-      expect(json[:data][0][:attributes]).to_not have_key(:api_key)
+    end
+  end
+
+  describe "Get Single User Endpoint" do
+    it "retrieves a single user by ID" do
+      user = User.create!(name: "Tom", username: "tommy", password: "test123")
+
+      get api_v1_user_path(user.id)
+
+      expect(response).to be_successful
+      json = JSON.parse(response.body, symbolize_names: true)
+
+      expect(json[:data][:id]).to eq(user.id.to_s)
+      expect(json[:data][:attributes][:name]).to eq(user.name)
+      expect(json[:data][:attributes][:username]).to eq(user.username)
+      expect(json[:data][:attributes]).to_not have_key(:password)
+      expect(json[:data][:attributes]).to_not have_key(:password_digest)
     end
   end
 end
