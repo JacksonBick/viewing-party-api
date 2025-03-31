@@ -1,7 +1,6 @@
 class Api::V1::ViewingPartiesController < ApplicationController
   def create
     viewing_party_params = params.permit(:name, :start_time, :end_time, :movie_id, :movie_title, :invitees)
-    # binding.pry
     
     
     host = User.find_by(id: params[:user_id])

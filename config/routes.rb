@@ -8,9 +8,9 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")  # root "posts#index"
   namespace :api do
     namespace :v1 do
-      resources :users, only: [:create, :index, :show]
+      resources :users, only: [:create, :index]
       resources :sessions, only: :create
-      resources :movies, only: :index
+      resources :movies, only: [:index, :show]
       resources :viewing_parties, only: [:create] do
         post 'invite_user', to: 'viewing_parties#invite_user'
       end

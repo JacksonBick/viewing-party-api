@@ -13,7 +13,6 @@ class User < ApplicationRecord
 
 
   def viewing_parties
-    # Assuming the association between ViewingParty and User is through a join table.
     ViewingParty.joins(:users).where(users: { id: self.id })
   end
 end

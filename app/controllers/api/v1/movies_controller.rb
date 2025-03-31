@@ -18,4 +18,10 @@ class Api::V1::MoviesController < ApplicationController
       render json: { data: serialized_movies[:data] }
     end
   end
+
+  def show
+    movie_details_data = DetailFacade.new.found_details(params[:id])
+
+    render json: { data: { id: movie_details_data.id, type: "movie", attributes: movie_details_data.attributes } }
+  end
 end

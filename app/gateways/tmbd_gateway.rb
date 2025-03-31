@@ -9,13 +9,13 @@ class TmbdGateway
     get_url("search/movie?query=#{title}")
   end
 
-  def movie_details(string)
-    get_url("discover/movie?#{string}")
+  def movie_details(movie_id)
+    get_url("movie/#{movie_id}?append_to_response=credits,reviews")
   end
 
   def get_url(url)
     response = conn.get(url)
-  
+    
     JSON.parse(response.body, symbolize_names: true)
   end
 
