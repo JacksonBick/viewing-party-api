@@ -21,8 +21,6 @@ class Api::V1::ViewingPartiesController < ApplicationController
         viewing_party.users << user
       end
       render json: ViewingPartySerializer.new(viewing_party).serializable_hash, status: :created
-    else
-      render json: { error: "Unable to create Viewing Party" }, status: :unprocessable_entity
     end
   end
 
@@ -34,8 +32,6 @@ class Api::V1::ViewingPartiesController < ApplicationController
 
     if viewing_party.save
       render json: ViewingPartySerializer.new(viewing_party).serializable_hash, status: :ok
-    else
-      render json: { error: "Unable to invite user" }, status: :unprocessable_entity
     end
   end
 end
